@@ -1,0 +1,4 @@
+[32mINFO    [0m base_page:base_page.py:16 Opening URL: https://iq4staging.usw2.rainbird.com
+[32mINFO    [0m base_page:base_page.py:25 Typing into: ('id', 'userName') | value_length=14
+[32mINFO    [0m base_page:base_page.py:25 Typing into: ('id', 'password') | value_length=12
+[32mINFO    [0m base_page:base_page.py:20 Clicking element: ('id', 'login')

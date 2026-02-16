@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="6.981" timestamp="2026-02-14T10:55:18.945758-06:00" hostname="TUCKDESAI01"><testcase classname="tests.test_login" name="test_login_admin" time="6.936" /></testsuite></testsuites>

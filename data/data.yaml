@@ -1,0 +1,24 @@
+qa:
+  users:
+    admin:
+      username: "guruautomation"
+      password: "Rainbird@123"
+    user:
+      username: "someuser"
+      password: "USER_PASSWORD"
+
+  login:
+    invalid_user: "bad"
+    invalid_pass: "bad"
+    error_contains: "Invalid username or password"
+
+stage:
+  users:
+    admin:
+      username: "stage_admin"
+      password: "STAGE_PASSWORD"
+
+  login:
+    invalid_user: "bad"
+    invalid_pass: "bad"
+    error_contains: "Invalid username or password"

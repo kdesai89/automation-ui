@@ -1,0 +1,8 @@
+framework:
+  browser: "chrome"          # chrome | edge | firefox
+  headless: false
+  screenshot_on_fail: true
+
+selenium:
+  implicit_wait_sec: 0
+  page_load_timeout_sec: 60

@@ -1,0 +1,11 @@
+qa:
+  base_url: "https://iq4staging.usw2.rainbird.com"
+  timeout_sec: 20
+
+stage:
+  base_url: "https://stage.example.com"
+  timeout_sec: 25
+
+prod:
+  base_url: "https://www.example.com"
+  timeout_sec: 25

@@ -1,0 +1,46 @@
+name: UI Tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 7 * * *"   # daily (UTC)
+
+jobs:
+  ui:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build -t ui-tests:latest .
+
+      - name: Run Smoke tests
+        run: |
+          mkdir -p reports
+          docker run --rm \
+            -e ENV=qa \
+            -e HEADLESS=true \
+            -e CI=true \
+            -v "${{ github.workspace }}/reports:/app/reports" \
+            ui-tests:latest \
+            pytest -c tests/pytest.ini --env qa -m smoke --junitxml=reports/junit.xml --alluredir=reports/allure-results
+
+
+      - name: Generate Allure HTML
+        if: always()
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}/reports:/app/reports" \
+            ui-tests:latest \
+            bash -lc "allure generate /app/reports/allure-results -o /app/reports/allure-report --clean || true"
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-reports
+          path: reports/
