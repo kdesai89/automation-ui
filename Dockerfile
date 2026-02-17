@@ -15,12 +15,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/*
 
 # Install Allure CLI
-ARG ALLURE_VERSION=2.29.0
-RUN wget -q https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz \
- && tar -xzf allure-${ALLURE_VERSION}.tgz \
- && mv allure-${ALLURE_VERSION} /opt/allure \
- && ln -s /opt/allure/bin/allure /usr/local/bin/allure \
- && allure --version
+# Allure CLI (reliable install)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    nodejs npm default-jre-headless \
+    && npm i -g allure-commandline --save-dev \
+    && allure --version \
+    && rm -rf /var/lib/apt/lists/*
 
 # Python deps
 COPY requirements.txt .
