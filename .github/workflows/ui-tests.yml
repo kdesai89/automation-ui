@@ -4,22 +4,32 @@ on:
   pull_request:
   workflow_dispatch:
   schedule:
-    - cron: "0 7 * * *"  # daily (UTC)
+    - cron: "0 7 * * *"   # Daily at 07:00 UTC
 
 jobs:
   ui:
     runs-on: ubuntu-latest
 
     steps:
+      # ------------------------------------------------------------
+      # Checkout code
+      # ------------------------------------------------------------
       - name: Checkout
         uses: actions/checkout@v4
 
+      # ------------------------------------------------------------
+      # Build Docker image
+      # ------------------------------------------------------------
       - name: Build Docker image
         run: docker build -t ui-tests:latest .
 
+      # ------------------------------------------------------------
+      # Run Smoke Tests inside container
+      # ------------------------------------------------------------
       - name: Run Smoke tests
         run: |
           mkdir -p reports
+
           docker run --rm \
             -e ENV=qa \
             -e HEADLESS=true \
@@ -27,23 +37,40 @@ jobs:
             -v "${{ github.workspace }}/reports:/app/reports" \
             ui-tests:latest \
             pytest -c tests/pytest.ini --env qa -m smoke \
-              --junitxml=reports/junit.xml \
-              --alluredir=reports/allure-results
+            --junitxml=reports/junit.xml \
+            --alluredir=reports/allure-results
 
-      # Install Allure CLI directly on GitHub runner
+      # ------------------------------------------------------------
+      # Install Allure CLI on GitHub runner
+      # ------------------------------------------------------------
       - name: Install Allure
         if: always()
         run: |
           sudo apt-get update
+          sudo apt-get install -y openjdk-17-jre-headless
           sudo apt-get install -y allure
+          echo "Allure location:"
+          which allure
+          allure --version
 
+      # ------------------------------------------------------------
+      # Generate Allure HTML Report
+      # ------------------------------------------------------------
       - name: Generate Allure HTML
         if: always()
         run: |
+          if [ ! -d "reports/allure-results" ]; then
+            echo "No Allure results found. Skipping report generation."
+            exit 0
+          fi
+
           allure generate reports/allure-results \
             --clean \
             -o reports/allure-report
 
+      # ------------------------------------------------------------
+      # Upload Test Reports
+      # ------------------------------------------------------------
       - name: Upload reports
         if: always()
         uses: actions/upload-artifact@v4
