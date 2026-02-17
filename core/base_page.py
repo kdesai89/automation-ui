@@ -17,16 +17,24 @@ class BasePage:
         self.driver.get(url)
 
     def click(self, locator):
-        log.info(f"Clicking element: {locator}")
+     log.info(f"Clicking element: {locator}")
+     try:
         element = self.wait.until(EC.element_to_be_clickable(locator))
         element.click()
+     except TimeoutException:
+        log.error(f"Timeout waiting for clickable: {locator}")
+        raise
 
     def type(self, locator, text: str, clear: bool = True):
-        log.info(f"Typing into: {locator} | value_length={len(text)}")
+     log.info(f"Typing into: {locator} | value_length={len(text)}")
+     try:
         element = self.wait.until(EC.visibility_of_element_located(locator))
         if clear:
             element.clear()
         element.send_keys(text)
+     except TimeoutException:
+        log.error(f"Timeout waiting for visible: {locator}")
+        raise
 
     def is_visible(self, locator) -> bool:
         try:
