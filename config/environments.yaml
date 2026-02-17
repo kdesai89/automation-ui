@@ -1,6 +1,6 @@
 qa:
   base_url: "https://iq4.rainbird.com"
-  timeout_sec: 40
+  timeout_sec: 60
 
 stage:
   base_url: "https://iq4staging.usw2.rainbird.com"
